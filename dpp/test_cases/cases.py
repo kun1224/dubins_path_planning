@@ -6,7 +6,7 @@ class TestCase:
 
     def __init__(self):
 
-        self.start_pos = [4.6, 2.4, 0]
+        self.start_pos = [4.6, 2.0, 0]
         self.end_pos = [1.6, 8, -pi/2]
 
         self.start_pos2 = [4, 4, 0]
