@@ -15,17 +15,17 @@ from dpp.methods.hybrid_astar import HybridAstar
 from time import time
 
 
-def main(heu=1, reverse=False, extra=False, grid_on=False):
+def main(heu=1, reverse=False, extra=False, grid_on=False): #heu表示启发式函数的类型，reverse表示是否允许倒车，extra表示是否添加额外的代价，grid_on表示是否显示网格
 
-    tc = TestCase()
+    tc = TestCase()#测试用例
 
-    env = Environment(tc.obs)
+    env = Environment(tc.obs)#环境
 
-    car = SimpleCar(env, tc.start_pos, tc.end_pos)
+    car = SimpleCar(env, tc.start_pos, tc.end_pos)#小车
 
-    grid = Grid(env)
+    grid = Grid(env)#网格
     
-    hastar = HybridAstar(car, grid, reverse)
+    hastar = HybridAstar(car, grid, reverse,check_dubins=5)#混合A星算法
 
     t = time()
     path, closed_ = hastar.search_path(heu, extra)
@@ -142,7 +142,7 @@ def main(heu=1, reverse=False, extra=False, grid_on=False):
         return _branches, _path, _carl, _path1, _car
 
     ani = animation.FuncAnimation(fig, animate, init_func=init, frames=frames,
-                                  interval=1, repeat=True, blit=True)
+                                  interval=100, repeat=True, blit=True)
 
     plt.show()
 
@@ -155,4 +155,4 @@ if __name__ == '__main__':
     p.add_argument('-g', action='store_true', help='show grid or not')
     args = p.parse_args()
 
-    main(heu=args.heu, reverse=args.r, extra=args.e, grid_on=args.g)
+    main(heu=args.heu, reverse=args.r, extra=args.e, grid_on=True)

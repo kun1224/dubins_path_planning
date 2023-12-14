@@ -35,8 +35,8 @@ class Params:
 
     def __init__(self, cell_id, g):
 
-        self.cell_id = cell_id
-        self.g = g
+        self.cell_id = cell_id #节点在网格中的位置
+        self.g = g #从起点到该节点的代价
     
     def __eq__(self, cell_id):
 
@@ -52,14 +52,14 @@ class Astar:
 
     def __init__(self, grid, start):
 
-        self.grid = grid
-        self.start = self.grid.to_cell_id(start)
-        self.table = []
+        self.grid = grid #是否显示网格
+        self.start = self.grid.to_cell_id(start) #起点位置
+        self.table = [] #存储起点到终点的代价
     
     def heuristic(self, p1, p2):
         """ Simple Manhattan distance  heuristic. """
 
-        return abs(p2[0]-p1[0]) + abs(p2[1]-p1[1])
+        return abs(p2[0]-p1[0]) + abs(p2[1]-p1[1]) #曼哈顿距离
     
     def backtracking(self, node):
         """ Backtracking the path. """
@@ -73,40 +73,40 @@ class Astar:
         
         return list(reversed(route))
     
-    def search_path(self, goal):
+    def search_path(self, goal): #搜索路径，参数是终点位置
         """ Search the path by astar. """
 
-        goal = self.grid.to_cell_id(goal)
+        goal = self.grid.to_cell_id(goal) #终点位置
 
-        if goal in self.table:
+        if goal in self.table: #如果终点位置已经计算过了，直接返回代价
             return self.table[self.table.index(goal)].g
 
-        root = Node(self.start)
-        root.g = 0
-        root.f = root.g + self.heuristic(self.start, goal)
+        root = Node(self.start) #起点
+        root.g = 0 #起点代价
+        root.f = root.g + self.heuristic(self.start, goal) #起点代价+启发函数
 
-        closed_ = []
-        open_ = [root]
+        closed_ = [] #已经计算过的节点
+        open_ = [root] #待计算的节点
 
-        while open_:
+        while open_: #如果待计算的节点不为空
 
-            best = min(open_, key=lambda x: x.f)
+            best = min(open_, key=lambda x: x.f) #根据f值选择最优节点，选择代价最小的节点，作为当前节点
 
-            open_.remove(best)
-            closed_.append(best)
+            open_.remove(best) #从待计算节点中删除当前节点
+            closed_.append(best) #将当前节点加入已计算节点
 
-            if best.cell_id == goal:
+            if best.cell_id == goal: #如果当前节点是终点
                 # route = self.backtracking(best)
-                self.table.append(Params(goal, best.g))
-                return best.g
+                self.table.append(Params(goal, best.g)) #将终点的代价存入table
+                return best.g #返回终点的代价
 
-            nbs = self.grid.get_neighbors(best.cell_id)
+            nbs = self.grid.get_neighbors(best.cell_id)#获取当前节点的邻居节点
 
             for nb in nbs:
                 child = Node(nb)
-                child.g = best.g + 1
-                child.f = child.g + self.heuristic(nb, goal)
-                child.parent = best
+                child.g = best.g + 1 #邻居节点的代价是当前节点的代价+1
+                child.f = child.g + self.heuristic(nb, goal) #邻居节点的f值是邻居节点的代价+启发函数
+                child.parent = best #邻居节点的父节点是当前节点
 
                 if child in closed_:
                     continue

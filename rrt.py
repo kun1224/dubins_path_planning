@@ -120,7 +120,7 @@ def main():
         return _branches, _nodes, _path, _carl, _path1, _car
 
     ani = animation.FuncAnimation(fig, animate, init_func=init, frames=frames, 
-                                  interval=1, repeat=True, blit=True)
+                                  interval=50, repeat=True, blit=True)
 
     plt.show()
 

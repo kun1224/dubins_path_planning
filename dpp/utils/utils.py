@@ -3,7 +3,7 @@ from matplotlib.collections import PatchCollection
 import numpy as np
 
 
-def transform(x, y, w, l, theta, id):
+def transform(x, y, w, l, theta, id):   #x: x坐标，y: y坐标，w: 车宽，l: 车长，theta: 车头朝向，id:  转弯方向，1表示左前，2表示右前，3表示左后，4表示右后
     """ Coordinates transform. """
 
     if id == 1:

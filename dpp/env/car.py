@@ -6,6 +6,7 @@ from time import time
 from dpp.utils.utils import transform, same_point
 
 
+
 class State:
 
     def __init__(self, pos, model):
@@ -15,7 +16,9 @@ class State:
 
 
 class SimpleCar:
-    """ Car model and functions. """
+    """ Car model and functions. 
+    表示一个简单的小车模型。它包含了一些属性和方法，用于描述小车的状态和行为    
+    """
 
     def __init__(self, env, start_pos=None, end_pos=None, l=0.5, max_phi=pi/5):
 
@@ -56,7 +59,9 @@ class SimpleCar:
         return pos
 
     def get_params(self, pos, phi):
-        """ Get parameters for turning route. """
+        """ Get parameters for turning route. 
+        该方法接受一个位置pos和一个转向角度phi作为输入，然后计算出小车转弯路径的半径、方向和中心点
+        """
 
         x, y, theta = pos
 
@@ -69,7 +74,9 @@ class SimpleCar:
         return d, c, r
     
     def get_car_bounding(self, pos):
-        """ Get the bounding rectangle of car. """
+        """ Get the bounding rectangle of car. 
+        四边形即为小车的边界矩形
+        """
 
         x, y, theta = pos
 
@@ -80,7 +87,7 @@ class SimpleCar:
 
         vertex = [self.c1.tolist(), self.c2.tolist(), self.c4.tolist(), self.c3.tolist()]
 
-        return vertex
+        return vertex #返回四边形的四个顶点坐标
     
     def get_car_state(self, pos, phi=0):
         """ Get the car state according to the pos and steering angle. """
@@ -110,10 +117,14 @@ class SimpleCar:
 
         state = State(pos, model)
 
-        return state
+        return state #并返回一个State对象，表示小车的状态
     
     def step(self, pos, phi, m=1, dt=1e-2):
-        """ Car dynamics. """
+        """ Car dynamics. 
+        这部分代码定义了一个step方法，用于模拟小车的运动。
+        该方法接受一个位置pos、转向角度phi和运动方向m作为输入，
+        然后根据小车的运动学模型计算出小车dt时间后的新位置pos_new，并返回该位置。
+        """
 
         x, y, theta = pos
         dx     = cos(theta)
@@ -127,14 +138,21 @@ class SimpleCar:
         return [x, y, theta]
     
     def is_pos_safe(self, pos):
-        """ Check pos safety. """
+        """ Check pos safety. 
+        该方法接受一个位置pos作为输入，然后使用get_car_bounding方法获取小车的边界矩形，
+        最后调用env对象的rectangle_safe方法检查该矩形是否与障碍物相交。
+        """
 
         vertex = self.get_car_bounding(pos)
 
         return self.env.rectangle_safe(vertex)
     
     def is_route_safe(self, pos, route):
-        """ Check route safety. """
+        """ Check route safety. 
+        这部分代码定义了一个is_route_safe方法，用于检查小车的路径是否安全。该方法接受一个位置pos和一条路径route作为输入，
+        然后遍历路径中的每个目标点，使用step方法模拟小车的运动，然后使用is_pos_safe方法检查小车的位置是否安全。
+        如果发现位置不安全，那么立即停止遍历并返回False，表示路径不安全；否则继续遍历，直到检查完所有目标点，返回True，表示路径安全。
+        """
 
         safe = True
 
@@ -156,7 +174,9 @@ class SimpleCar:
         return safe
     
     def get_path(self, pos, route):
-        """ Generate path according to route. """
+        """ Generate path according to route. 
+        get_path方法，用于根据路径route生成小车的运动路径
+        """
 
         path = []
 
@@ -182,7 +202,7 @@ class SimpleCar:
         path = []
 
         for phi, m, steps in controls:
-            for _ in range(steps):
+            for _ in range(steps):#steps表示小车在当前控制输入下运行的步数
                 car_state = self.get_car_state(pos, phi)
                 path.append(car_state)
                 pos = self.step(pos, phi, m)

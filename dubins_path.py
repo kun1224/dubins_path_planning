@@ -62,9 +62,18 @@ def main():
 
     for ob in env.obs:
         ax.add_patch(Rectangle((ob.x, ob.y), ob.w, ob.h, fc='gray', ec='k'))
-    
+    #画出起点和终点
     ax.plot(car.start_pos[0], car.start_pos[1], 'ro', markersize=5)
-    
+    ax.plot(car.end_pos[0], car.end_pos[1], 'ro', markersize=5)
+    #画出切点
+    for trajectory in route:
+        ax.plot(trajectory[0][0], trajectory[0][1], 'ro', markersize=5)
+    #画出圆心
+    ax.plot(dubins.lc1[0], dubins.lc1[1], 'ro', markersize=5)
+    ax.plot(dubins.rc1[0], dubins.rc1[1], 'ro', markersize=5)
+    ax.plot(dubins.lc2[0], dubins.lc2[1], 'ro', markersize=5)
+    ax.plot(dubins.rc2[0], dubins.rc2[1], 'ro', markersize=5)
+
     ax.add_collection(lc)
     ax.add_patch(lcircle1)
     ax.add_patch(rcircle1)
